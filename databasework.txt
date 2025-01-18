@@ -1,0 +1,157 @@
+CREATE VIEW final37_no1 AS
+SELECT t_id, t_name
+FROM temples
+WHERE t_sect = 'ธรรมยุต';
+
+CREATE VIEW final37_no2 AS
+SELECT t_id, t_name
+FROM temples
+WHERE t_sect = 'จีนนิกาย';
+
+CREATE VIEW final37_no3 AS
+SELECT t_id, t_name, t_sect
+FROM temples
+WHERE t_sect NOT IN ('ธรรมยุต', 'มหานิกาย')
+ORDER BY t_sect;
+
+CREATE VIEW final37_no4 AS
+SELECT t_sect AS นิกาย, COUNT(*) AS จำนวน
+FROM temples
+GROUP BY t_sect;
+
+CREATE VIEW final37_no5 AS
+SELECT COUNT(*) AS จำนวนวัดในจังหวัดอุดรธานี
+FROM temples
+WHERE province = 29;
+
+CREATE VIEW final37_no6 AS
+SELECT COUNT(*) AS จำนวนวัดในอำเภอเมืองอุดรธานี
+FROM temples
+WHERE province = 29 AND amphur = 421;
+
+CREATE VIEW final37_no7 AS
+SELECT COUNT(*) AS จำนวนวัดในอำเภอหนองวัวซออุดรธานี
+FROM temples
+WHERE province = 29 AND amphur = 423 AND t_sect = 'ธรรมยุต';
+
+CREATE VIEW final37_no8 AS
+SELECT bgeo_name AS "ภาค", COUNT(t.budd_geo) AS "จำนวนวัด"
+FROM buddhism_geo bg
+JOIN temples t ON bg.bgeo_id = t.budd_geo
+GROUP BY bg.bgeo_name;
+
+CREATE VIEW final37_no9 AS
+SELECT t_name, t_sect
+FROM temples
+WHERE province = 29 AND amphur = 423 AND t_sect = 'ธรรมยุต';
+
+CREATE VIEW final37_10 AS
+SELECT COUNT(*) AS จำนวนจังหวัด, geo_name AS ภาค
+FROM provinces
+GROUP BY geo_name;
+------------------------------------------------------------------------------------
+CREATE  TABLE  final_books  
+(BID VARCHAR(10) NOT NULL PRIMARY KEY, 
+TITLE  VARCHAR(30),PID VARCHAR(5) ,Price DECIMAL(8,2) );
+INSERT INTO final_books  VALUES
+  ('0736','Windows98','12',500),
+ ('0877','Office97','12',150),
+ ('1388','JAVA Vs C++','05',250),
+('1524','Database','04',155),
+('1997','Netscape','04',490),
+('2504','C Algorithm','12',1000),
+('5911','Networking','04',1950),
+('9090','Digital Image',NULL,NULL);
+
+UPDATE final_books
+SET Price = Price * 0.8
+WHERE Price >= 500;
+
+CREATE VIEW final_books_no13 AS
+SELECT title, pid, price
+FROM final_books
+WHERE pid <> 04;
+
+CREATE VIEW final_books_no14 AS
+SELECT title, pid, price
+FROM final_books
+WHERE price > 500 OR pid = 12;
+
+CREATE VIEW final_books_no15 AS
+SELECT title, pid, price
+FROM final_books
+WHERE price BETWEEN 500 AND 1000;
+
+CREATE VIEW final_books_no16 AS
+SELECT BID, TITLE, PID, Price
+FROM final_books
+WHERE Price IS NULL;
+
+CREATE VIEW final_books_no17 AS
+SELECT BID, TITLE, PID, Price
+FROM final_books
+WHERE Price IS NOT NULL;
+
+CREATE VIEW final_books_no18 AS
+SELECT BID, TITLE, PID, Price
+FROM final_books
+WHERE BID LIKE '1%';
+
+CREATE VIEW final_books_no19 AS
+SELECT title, CAST(price AS VARCHAR(20)) + ' บาท' AS price
+FROM final_books;
+
+CREATE VIEW final_books_no20 AS
+SELECT BID, TITLE, PID, Price
+FROM final_books
+ORDER BY Price DESC;
+
+CREATE VIEW final_books_no21 AS
+SELECT title, price, 
+       price * 0.07 AS ภาษี, 
+       price + (price * 0.07) AS ราคารวมภาษี
+FROM final_books;
+
+CREATE VIEW final_books_no22 AS
+SELECT bid, LOWER(title) AS title, price
+FROM final_books
+ORDER BY price;
+
+CREATE VIEW final_books_no23 AS
+SELECT *
+FROM final_books
+ORDER BY BID
+LIMIT 3;
+
+CREATE VIEW final_books_no24 AS
+SELECT PID AS กลุ่มหนังสือ, SUM(Price) AS รวมราคาหนังสือในกลุ่ม
+FROM final_books
+GROUP BY PID;
+
+CREATE VIEW final_books_no25 AS
+SELECT 
+    MAX(Price) AS ราคาหนังสือสูงสุด,
+    MIN(Price) AS ราคาหนังสือต่ำสุด,
+    AVG(Price) AS ราคาหนังสือเฉลี่ย
+FROM final_books;
+
+CREATE VIEW final_books_no26 AS
+SELECT DISTINCT PID
+FROM final_books;
+
+CREATE TABLE final_books2 (
+    BID VARCHAR(10) NOT NULL PRIMARY KEY,
+    TITLE VARCHAR(30),
+    PID VARCHAR(5),
+    Price DECIMAL(8,2)
+);
+
+INSERT INTO final_books2 (BID, TITLE, PID, Price)
+SELECT BID, TITLE, PID, Price
+FROM final_books;
+
+DELETE FROM final_books2
+WHERE PID = 04 AND Price > 1000;
+
+DELETE FROM final_books2
+WHERE PID = 05 OR Price IS NULL;
