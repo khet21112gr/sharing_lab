@@ -1,0 +1,62 @@
+#include <Bonezegei_DHT11.h>
+#include <ESP8266WiFi.h>
+#include <PubSubClient.h>
+
+const int analogPin = A0;  // ขา Analog สำหรับอ่านค่าความสว่าง
+const int digitalPin = 2;  // ขา Digital สำหรับอ่านสถานะ HIGH/LOW
+// WiFi Credentials
+const char* ssid = "vivo 1907";
+const char* password = "cover.19";
+
+// NETPIE Credentials
+const char* mqttServer = "broker.netpie.io";
+const char* mqttClientID = "ff292a58-4090-4ef0-a39a-c83938f67be2";
+const char* mqttUsername = "hBZ3on8ReFyXwabbQj5ZjREwQ5rXoCTK";
+const char* mqttPassword = "GcvLqNs3eyK1R7cmvEbi4Ebn65LATSSh";
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+//param = DHT11 signal pin
+Bonezegei_DHT11 dht(14);
+char msg[100];
+void setup() {
+  Serial.begin(115200);
+  pinMode(digitalPin, INPUT); 
+  WiFi.begin(ssid, password);
+  dht.begin();
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi connected");
+
+  client.setServer(mqttServer, 1883);
+   while (!client.connected()) {
+    if (client.connect(mqttClientID, mqttUsername, mqttPassword)) {
+      Serial.println("Connected to NETPIE");
+      client.subscribe("@msg/TOGGLE"); // Subscribe to control topic
+    } else {
+      delay(5000);
+    }
+  }
+}
+
+void loop() {
+  // อ่านค่าจาก Analog Pin
+  int lightLevel = analogRead(analogPin);
+  Serial.print("ค่าความสว่าง (Analog): ");
+  Serial.println(lightLevel);
+
+  if (lightLevel < 500) { // ถ้าค่า Analog น้อยกว่า 500
+    Serial.println("มีแสง");
+    digitalWrite(digitalPin, LOW); // กำหนดสถานะ Digital Pin เป็น LOW
+  } else {
+    Serial.println("ไม่มีแสง");
+    digitalWrite(digitalPin, HIGH); // กำหนดสถานะ Digital Pin เป็น HIGH
+  }
+  String data = "{\"data\": {\"lightLevel\":" + String(lightLevel) + "}}";
+  data.toCharArray(msg, (data.length() + 1));
+  client.publish("@shadow/data/update",msg);
+  client.loop();
+  delay(500);  // หน่วงเวลา 500ms
+}
