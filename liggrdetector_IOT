@@ -5,14 +5,14 @@
 const int analogPin = A0;  // ขา Analog สำหรับอ่านค่าความสว่าง
 const int digitalPin = 2;  // ขา Digital สำหรับอ่านสถานะ HIGH/LOW
 // WiFi Credentials
-const char* ssid = "vivo 1907";
-const char* password = "cover.19";
+const char* ssid = "";
+const char* password = "";
 
 // NETPIE Credentials
 const char* mqttServer = "broker.netpie.io";
-const char* mqttClientID = "ff292a58-4090-4ef0-a39a-c83938f67be2";
-const char* mqttUsername = "hBZ3on8ReFyXwabbQj5ZjREwQ5rXoCTK";
-const char* mqttPassword = "GcvLqNs3eyK1R7cmvEbi4Ebn65LATSSh";
+const char* mqttClientID = "";
+const char* mqttUsername = "";
+const char* mqttPassword = "";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
