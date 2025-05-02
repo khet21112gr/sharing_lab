@@ -1,0 +1,37 @@
+Folder PATH listing
+Volume serial number is 68C7-318E
+D:.
+|   dashboard.php
+|   globals.css
+|   index.php
+|   khet_db.sql
+|   login.php
+|   logout.php
+|   register.php
+|   server.php
+|   tree.txt
+|   
++---controllers
+|       add_book.php
+|       add_user.php
+|       delete_user.php
+|       edit_user.php
+|       rent_book.php
+|       return_book.php
+|       rm_book.php
+|       
++---handler
+|       login_db.php
+|       register_db.php
+|       
++---middleware
+|       auth_admin.php
+|       auth_employee.php
+|       auth_user.php
+|       
+\---panel
+        admin_panel.php
+        employee_panel.php
+        lib_panel.php
+        user_panel.php
+        
